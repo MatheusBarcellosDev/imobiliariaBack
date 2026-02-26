@@ -1,0 +1,94 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  password  String
+  role      Role     @default(AGENT)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  leads     Lead[]
+}
+
+enum Role {
+  ADMIN
+  AGENT
+}
+
+model Property {
+  id          String   @id @default(uuid())
+  title       String
+  description String
+  price       Float
+  area        Float
+  bedrooms    Int
+  bathrooms   Int
+  garages     Int
+  type        String   // e.g "Apartamento", "Casa"
+  status      String   // e.g "Venda", "Aluguel"
+  images      String[] // Array de URLs
+  featured    Boolean  @default(false)
+
+  // -- Campos Avançados para Listagem "Muito Completa" --
+  amenities   String[] // ex: ["Piscina", "Academia", "Varanda Gourmet"]
+  documents   String[] // ex: Array de URLs para PDFs como Matricula, Planta, Laudos
+  iptu        Float?
+  condoFee    Float?
+  yearBuilt   Int?
+  floorPlan   String?  // URL para a imagem da planta baixa
+  
+  neighborhoodId String?
+  neighborhood   Neighborhood? @relation(fields: [neighborhoodId], references: [id])
+  
+  address     String?
+  lat         Float?
+  lng         Float?
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Neighborhood {
+  id          String     @id @default(uuid())
+  name        String
+  description String?
+  image       String?
+  properties  Property[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+model Lead {
+  id          String     @id @default(uuid())
+  name        String
+  email       String
+  phone       String?
+  source      String     @default("CHATBOT") // Ex: CHATBOT, SITE
+  status      LeadStatus @default(NOVO)
+  message     String?    // Mensagem inicial
+  
+  agentId     String?
+  agent       User?      @relation(fields: [agentId], references: [id])
+
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+enum LeadStatus {
+  NOVO
+  CONTATO_INICIAL
+  VISITA_AGENDADA
+  PROPOSTA
+  FECHADO
+  PERDIDO
+}
