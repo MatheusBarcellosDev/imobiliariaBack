@@ -132,6 +132,10 @@ export const updateProperty = async (req: Request, res: Response, next: NextFunc
             }
         });
 
+        if (data.neighborhoodId === "") {
+            data.neighborhoodId = null;
+        }
+
         const property = await prisma.property.update({
             where: { id: id as string },
             data,
