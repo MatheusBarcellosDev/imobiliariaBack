@@ -3,11 +3,14 @@ import prisma from "../lib/prisma";
 
 export const createProperty = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { title, description, price, area, bedrooms, bathrooms, garages, type, status, address, neighborhoodId, features, iptu, condoFee, yearBuilt, floorPlan } = req.body;
-
-        const images: string[] = req.body.images || [];
-        const amenities: string[] = req.body.amenities || [];
-        const documents: string[] = req.body.documents || [];
+        const {
+            title, description, price, area, bedrooms, bathrooms, garages, type, status,
+            images, amenities, documents, neighborhoodId, features, featured,
+            iptu, condoFee, yearBuilt,
+            rentPrice, maintenanceFee, commission, debtBalance, remainingInstallments,
+            usefulArea, privateArea, landArea, floors, buildingFloors, aptsPerFloor, suites, totalUnits, totalElevators,
+            ...restBody
+        } = req.body;
 
         const property = await prisma.property.create({
             data: {
@@ -20,16 +23,35 @@ export const createProperty = async (req: Request, res: Response, next: NextFunc
                 garages: parseInt(garages),
                 type,
                 status,
-                address,
-                images,
-                amenities,
-                documents,
+                images: images || [],
+                amenities: amenities || [],
+                documents: documents || [],
+                neighborhoodId: neighborhoodId || undefined,
+                featured: featured || false,
+
+                // Parsed Numbers (Optional)
                 iptu: iptu ? parseFloat(iptu) : undefined,
                 condoFee: condoFee ? parseFloat(condoFee) : undefined,
                 yearBuilt: yearBuilt ? parseInt(yearBuilt) : undefined,
-                floorPlan,
-                neighborhoodId: neighborhoodId || undefined,
-                featured: req.body.featured || false,
+                rentPrice: rentPrice ? parseFloat(rentPrice) : undefined,
+                maintenanceFee: maintenanceFee ? parseFloat(maintenanceFee) : undefined,
+                commission: commission ? parseFloat(commission) : undefined,
+                debtBalance: debtBalance ? parseFloat(debtBalance) : undefined,
+                usefulArea: usefulArea ? parseFloat(usefulArea) : undefined,
+                privateArea: privateArea ? parseFloat(privateArea) : undefined,
+                landArea: landArea ? parseFloat(landArea) : undefined,
+
+                // Parsed Integers (Optional/Default)
+                suites: suites ? parseInt(suites) : 0,
+                remainingInstallments: remainingInstallments ? parseInt(remainingInstallments) : undefined,
+                floors: floors ? parseInt(floors) : undefined,
+                buildingFloors: buildingFloors ? parseInt(buildingFloors) : undefined,
+                aptsPerFloor: aptsPerFloor ? parseInt(aptsPerFloor) : undefined,
+                totalUnits: totalUnits ? parseInt(totalUnits) : undefined,
+                totalElevators: totalElevators ? parseInt(totalElevators) : undefined,
+
+                // Spread the rest (Booleans, Strings, String Arrays like exchangeOptions)
+                ...restBody
             },
         });
 

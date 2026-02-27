@@ -47,6 +47,78 @@ model Property {
   yearBuilt   Int?
   floorPlan   String?  // URL para a imagem da planta baixa
   
+  // Informações Básicas Adicionais
+  referenceCode    String?
+  shortDescription String?
+  condition        String? // Ex: Usado, Novo, Em construção, Na planta
+
+  // Preços e Valores Financeiros Adicionais
+  rentPrice        Float?
+  maintenanceFee   Float?
+  priceNegotiable  Boolean @default(false)
+  acceptsFinancing Boolean @default(false)
+  acceptsExchange  Boolean @default(false)
+
+  // Localização Completa Adicional (Lat/Lng e Address já existem)
+  country          String  @default("Brasil")
+  state            String?
+  city             String?
+  street           String?
+  number           String?
+  complement       String?
+  zipCode          String?
+
+  // Cômodos e Estrutura Adicionais (bedrooms, bathrooms, garages, area já existem)
+  suites           Int     @default(0)
+  usefulArea       Float?
+  privateArea      Float?
+  landArea         Float?
+  floors           Int?    // Andar do apto
+  buildingFloors   Int?    // Andares do Edifício
+  aptsPerFloor     Int?
+
+  // Detalhes Técnicos
+  sunOrientation   String?
+  sunExposure      String?
+  viewType         String?
+  windowType       String?
+  floorType        String?
+
+  // Informações do Condomínio
+  condoName        String?
+  condoAdmin       String?
+  condoBuilder     String?
+  constructionProfile String? // Ex: Alto Padrão, MCMV
+  totalUnits       Int?
+  totalElevators   Int?
+  condoAmenities   String[] // Infraestrutura e Lazer do condomínio
+
+  // Informações Comerciais e Permuta
+  zoning           String?
+  commission       Float?
+  debtBalance      Float?
+  remainingInstallments Int?
+  exchangeOptions  String[] // Ex: ["Veículo", "Imóvel", "Dação"]
+
+  // SEO
+  seoTitle         String?
+  seoDescription   String?
+  seoKeywords      String?
+
+  // Status e Gestão Interna (featured já existe)
+  published        Boolean @default(true)
+  superFeatured    Boolean @default(false)
+  newRelease       Boolean @default(false)
+  hasBoard         Boolean @default(false) // Placa no local
+  exclusive        Boolean @default(false)
+  
+  keyLocation        String?
+  keyManager         String? // Ex: Zeladoria / Portaria
+  managerName        String?
+  managerPhone       String?
+  internalNotes      String?
+  visitInstructions  String?
+
   neighborhoodId String?
   neighborhood   Neighborhood? @relation(fields: [neighborhoodId], references: [id])
   

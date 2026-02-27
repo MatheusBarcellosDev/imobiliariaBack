@@ -25,69 +25,93 @@ async function main() {
 
     console.log(`✅ Usuário Admin criado. Email: admin@lorenalorenzo.com | Senha: admin123`);
 
-    // 2. Criar Bairros Populares
-    const neighborhood1 = await prisma.neighborhood.create({
+    // 2. Criar Bairros Populares (Florianópolis / São José)
+    const kobrasol = await prisma.neighborhood.create({
         data: {
-            name: "Jardim Europa",
-            description: "Um dos bairros mais nobres de São Paulo, conhecido por suas mansões e ruas arborizadas.",
-            image: "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?auto=format&fit=crop&q=80&w=1200",
-        }
-    });
-
-    const neighborhood2 = await prisma.neighborhood.create({
-        data: {
-            name: "Vila Nova Conceição",
-            description: "Localizado ao lado do Parque do Ibirapuera, com os edifícios de mais alto luxo do Brasil.",
+            name: "Kobrasol",
+            description: "Coração comercial e residencial de São José. Polo gastronômico e de serviços completo na Grande Florianópolis, oferecendo alto padrão de vida e conveniência.",
             image: "https://images.unsplash.com/photo-1449844908441-8829872d2607?auto=format&fit=crop&q=80&w=1200",
         }
     });
 
-    console.log(`✅ Bairros criados.`);
+    const campinas = await prisma.neighborhood.create({
+        data: {
+            name: "Campinas",
+            description: "Bairro nobre e histórico de São José, com uma incrível orla marítima recém-revitalizada, perfeita para caminhadas ao pôr do sol.",
+            image: "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?auto=format&fit=crop&q=80&w=1200",
+        }
+    });
+
+    const barreiros = await prisma.neighborhood.create({
+        data: {
+            name: "Barreiros",
+            description: "Uma região em grande expansão residencial, contando com centros de ensino, amplo comércio e fácil acesso à BR-101 e ilha de Floripa.",
+            image: "https://images.unsplash.com/photo-1588880331179-bc9b93a8cb65?auto=format&fit=crop&q=80&w=1200",
+        }
+    });
+
+    const estreito = await prisma.neighborhood.create({
+        data: {
+            name: "Estreito",
+            description: "Fronteira continental com a ilha, o Estreito possui vida própria com o novo Parque de Coqueiros/Estreito, oferecendo alto luxo de frente para o mar.",
+            image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&q=80&w=1200",
+        }
+    });
+
+    const coqueiros = await prisma.neighborhood.create({
+        data: {
+            name: "Coqueiros",
+            description: "Bairro mais nobre e tradicional da região continental. Conhecido pela Via Gastronômica, calçadão beira-mar e vista inigualável da ponte Hercílio Luz.",
+            image: "https://images.unsplash.com/photo-1512915922686-57c11dde9b6b?auto=format&fit=crop&q=80&w=1200",
+        }
+    });
+
+    console.log(`✅ Bairros da Grande Florianópolis criados.`);
 
     // 3. Criar Imóveis
     await prisma.property.createMany({
         data: [
             {
-                title: "Mansão Jardim Europa",
-                description: "Magnífica mansão em rua fechada com segurança dupla. Acabamentos importados.",
-                price: 35000000,
-                area: 1200,
-                bedrooms: 5,
-                bathrooms: 8,
-                garages: 6,
-                type: "Casa",
+                title: "Cobertura Skyline Kobrasol",
+                description: "Magnífica cobertura no coração do Kobrasol com vista panorâmica para o mar e acabamentos importados.",
+                price: 3500000,
+                area: 280,
+                bedrooms: 4,
+                bathrooms: 5,
+                garages: 3,
+                type: "Cobertura",
                 status: "AVAILABLE",
                 images: ["https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"],
                 featured: true,
-                neighborhoodId: neighborhood1.id
+                neighborhoodId: kobrasol.id
             },
             {
-                title: "Cobertura Duplex Parque Ibirapuera",
-                description: "Vista espetacular em 360º para a copa das árvores. Design assinado.",
-                price: 42000000,
-                area: 850,
-                bedrooms: 4,
-                bathrooms: 6,
-                garages: 5,
+                title: "Apartamento Frente Mar Campinas",
+                description: "Vista espetacular definitiva para a Beira-Mar de São José. Design assinado, varanda gourmet completa.",
+                price: 2200000,
+                area: 150,
+                bedrooms: 3,
+                bathrooms: 4,
+                garages: 2,
                 type: "Apartamento",
                 status: "AVAILABLE",
                 images: ["https://images.unsplash.com/photo-1512915922686-57c11dde9b6b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"],
                 featured: true,
-                neighborhoodId: neighborhood2.id
+                neighborhoodId: campinas.id
             },
             {
-                title: "Residência Contemporânea Cidade Jardim",
-                description: "Projeto arquitetônico moderno, integração total de ambientes com a natureza.",
-                price: 28000000,
-                area: 900,
+                title: "Residência Contemporânea Coqueiros",
+                description: "Projeto arquitetônico moderno em Coqueiros, integração total de ambientes na Via Gastronômica.",
+                price: 4800000,
+                area: 350,
                 bedrooms: 4,
                 bathrooms: 5,
                 garages: 4,
                 type: "Casa",
-                status: "AVAILABLE", /* ou algo como Venda */
+                status: "AVAILABLE",
                 images: ["https://images.unsplash.com/photo-1588880331179-bc9b93a8cb65?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"],
                 featured: false,
-                neighborhoodId: neighborhood1.id
+                neighborhoodId: coqueiros.id
             }
         ]
     });
