@@ -9,6 +9,7 @@ export const createProperty = async (req: Request, res: Response, next: NextFunc
             iptu, condoFee, yearBuilt,
             rentPrice, maintenanceFee, commission, debtBalance, remainingInstallments,
             usefulArea, privateArea, landArea, floors, buildingFloors, aptsPerFloor, suites, totalUnits, totalElevators,
+            lat, lng,
             ...restBody
         } = req.body;
 
@@ -40,6 +41,8 @@ export const createProperty = async (req: Request, res: Response, next: NextFunc
                 usefulArea: usefulArea ? parseFloat(usefulArea) : undefined,
                 privateArea: privateArea ? parseFloat(privateArea) : undefined,
                 landArea: landArea ? parseFloat(landArea) : undefined,
+                lat: lat ? parseFloat(lat) : undefined,
+                lng: lng ? parseFloat(lng) : undefined,
 
                 // Parsed Integers (Optional/Default)
                 suites: suites ? parseInt(suites) : 0,
@@ -104,15 +107,30 @@ export const updateProperty = async (req: Request, res: Response, next: NextFunc
         const { id } = req.params;
         const data = req.body;
 
-        // Optional field parsing
-        if (data.price) data.price = parseFloat(data.price);
-        if (data.area) data.area = parseFloat(data.area);
-        if (data.bedrooms) data.bedrooms = parseInt(data.bedrooms);
-        if (data.bathrooms) data.bathrooms = parseInt(data.bathrooms);
-        if (data.garages) data.garages = parseInt(data.garages);
-        if (data.iptu) data.iptu = parseFloat(data.iptu);
-        if (data.condoFee) data.condoFee = parseFloat(data.condoFee);
-        if (data.yearBuilt) data.yearBuilt = parseInt(data.yearBuilt);
+        const floatFields = ['price', 'area', 'iptu', 'condoFee', 'rentPrice', 'maintenanceFee', 'commission', 'debtBalance', 'usefulArea', 'privateArea', 'landArea', 'lat', 'lng'];
+        const intFields = ['bedrooms', 'bathrooms', 'garages', 'yearBuilt', 'suites', 'remainingInstallments', 'floors', 'buildingFloors', 'aptsPerFloor', 'totalUnits', 'totalElevators'];
+
+        floatFields.forEach(field => {
+            if (data[field] !== undefined) {
+                if (data[field] === "" || data[field] === null) {
+                    data[field] = null;
+                } else {
+                    data[field] = parseFloat(data[field]);
+                    if (isNaN(data[field])) data[field] = null;
+                }
+            }
+        });
+
+        intFields.forEach(field => {
+            if (data[field] !== undefined) {
+                if (data[field] === "" || data[field] === null) {
+                    data[field] = null;
+                } else {
+                    data[field] = parseInt(data[field]);
+                    if (isNaN(data[field])) data[field] = null;
+                }
+            }
+        });
 
         const property = await prisma.property.update({
             where: { id: id as string },
